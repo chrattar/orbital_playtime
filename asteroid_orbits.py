@@ -6,35 +6,32 @@ width, height = 1000, 1000
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 
-# Constants
-G = 6.67430e-11  # Gravitational constant
-M = 5.972e24  # Mass of the central body (Earth)
-dt = 6000  # Time step (1 minute per frame)
-scale_factor = 2e7  # Scaling to fit the simulation on screen
+##VARIBALE
+G = 6.67430e-11 
+M = 5.972e24  # Eatrth
+dt = 6000  # Timestep 1 min/frame == 365/86,400
+scale_factor = 2e7  # scale for scrn
 
-# Initial Conditions
-r_initial = 4.2e9  # 42,000 km from the center (geostationary orbit)
+#INITIAL 
+r_initial = 4.2e9
 satellite_pos = np.array([width / 2 - r_initial / scale_factor, height / 2], dtype=float)
-central_pos = np.array([width / 2, height / 2], dtype=float)  # Center of screen
-
-# Compute correct orbital velocity
-r_mag = r_initial  # Actual distance in meters
-v_initial = np.sqrt(G * M / r_mag)  # Circular orbit velocity
-
-# Initial velocity should be **perpendicular** to the radius
+central_pos = np.array([width / 2, height / 2], dtype=float)
+#ORBITABL VELOCITY - CORRECT and put int meters to start
+r_mag = r_initial 
+v_initial = np.sqrt(G * M / r_mag) 
 satellite_vel = np.array([0, -v_initial / scale_factor], dtype=float)
 
-# Simulation Loop
+#MAIN()
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Compute gravitational force
-    r = central_pos - satellite_pos  # Vector from satellite to center
-    r_mag = np.linalg.norm(r) * scale_factor  # Actual distance in meters
-    F = (G * M / r_mag**3) * r  # Force per unit mass (acceleration)
+#G froce
+    r = central_pos - satellite_pos
+    r_mag = np.linalg.norm(r) * scale_factor
+    F = (G * M / r_mag**3) * r  
 
     # Update velocity and position
     satellite_vel += F * dt
@@ -42,10 +39,10 @@ while running:
 
     # Draw everything
     screen.fill((0, 0, 0))
-    pygame.draw.circle(screen, (255, 255, 0), tuple(central_pos.astype(int)), 20)  # Central body
-    pygame.draw.circle(screen, (255, 0, 255), tuple(satellite_pos.astype(int)), 5)  # Satellite
+    pygame.draw.circle(screen, (255, 255, 0), tuple(central_pos.astype(int)), 20)  # CENTRAL BODY
+    pygame.draw.circle(screen, (255, 0, 255), tuple(satellite_pos.astype(int)), 5)  # SATELLITE
 
     pygame.display.flip()
-    clock.tick(60)  # 60 FPS
+    clock.tick(60)
 
 pygame.quit()
